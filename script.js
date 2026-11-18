@@ -20,7 +20,9 @@
   }
 
   function route() {
-    let id = decodeURIComponent(location.hash.slice(1)) || 'home', folder = id, sub = null;
+    let id = decodeURIComponent(location.hash.slice(1)) || 'home', folder, sub = null;
+    if (id === 'front') id = 'home'; // old shared links
+    folder = id;
     if (subs[id]) { folder = 'projects'; sub = id; }
     else if (folder === 'projects') sub = lastSub;
     if (!folders[folder]) folder = 'home';
