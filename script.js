@@ -1,7 +1,7 @@
 (function () {
   const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const folders = { front: 'Front page', skills: 'Skills', projects: 'Projects', volunteering: 'Volunteering', contact: 'Contact' };
+  const folders = { home: 'Homepage', skills: 'Skills', projects: 'Projects', volunteering: 'Volunteering', contact: 'Contact' };
   const subs = { zora: 'ZORA', vaulte: 'VAULTÉ', bestsecret: 'BestSecret audit' };
   const sheet = $('#sheet'), crumbs = $('#crumbs');
   let current = '', lastSub = 'zora';
@@ -20,19 +20,19 @@
   }
 
   function route() {
-    let id = decodeURIComponent(location.hash.slice(1)) || 'front', folder = id, sub = null;
+    let id = decodeURIComponent(location.hash.slice(1)) || 'home', folder = id, sub = null;
     if (subs[id]) { folder = 'projects'; sub = id; }
     else if (folder === 'projects') sub = lastSub;
-    if (!folders[folder]) folder = 'front';
+    if (!folders[folder]) folder = 'home';
     if (sub) lastSub = sub;
     const changed = folder !== current;
     $$('.page').forEach(p => p.hidden = p.id !== 'p-' + folder);
     $$('#folders button').forEach(b => { const on = b.dataset.go === folder; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; });
     if (sub) {
-      $$('.entry').forEach(e => e.hidden = e.id !== 'e-' + sub);
+      $$('#p-projects .entry').forEach(e => e.hidden = e.id !== 'e-' + sub);
       $$('#subs button').forEach(b => { const on = b.dataset.sub === sub; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; });
     }
-    const trail = [['Archive', '#front'], [folders[folder], '#' + folder]];
+    const trail = [['Archive', '#home'], [folders[folder], '#' + folder]];
     if (sub) trail.push([subs[sub], '#' + sub]);
     crumbs.innerHTML = trail.map((t, i) => i === trail.length - 1 ? `<li aria-current="page">${t[0]}</li>` : `<li><a href="${t[1]}">${t[0]}</a></li>`).join('');
     if (changed) {
